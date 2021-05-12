@@ -46,7 +46,7 @@ cryptography. We have identified two algorithms for each of the modules.
 
 # How to Run
 
-To run the project from the command line, go to the [dist](./CryptoDroid/dist/) folder and
+To run the project from the command line, go to the [dist](https://github.com/AbhishekHari29/CryptoDroid/tree/main/dist) folder and
 type the following:
 
 ```bash
