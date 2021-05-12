@@ -54,11 +54,3 @@ java -jar "CryptoDroid.jar"
 ```
 
 This project is build using Netbeans 8.2 RC.
- folder and
-type the following:
-
-```bash
-java -jar "CryptoDroid.jar"
-```
-
-This project is build using Netbeans 8.2 RC.
