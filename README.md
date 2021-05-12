@@ -54,3 +54,13 @@ java -jar "CryptoDroid.jar"
 ```
 
 This project is build using Netbeans 8.2 RC.
+
+# ScreenShots
+<img src="images/home.png" >
+
+<img src="images/encode.png" >
+<img src="images/decode.png" >
+
+<img src="images/encrypt.png" >
+<img src="images/decrypt.png" >
+
