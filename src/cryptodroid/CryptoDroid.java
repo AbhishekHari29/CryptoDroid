@@ -5,7 +5,7 @@
  */
 package cryptodroid;
 
-import cryptodroid.gui.MainWindow;
+import gui.MainWindow;
 
 /**
  *
@@ -17,8 +17,6 @@ public class CryptoDroid {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
         MainWindow.main(args);
     }
-    
 }
