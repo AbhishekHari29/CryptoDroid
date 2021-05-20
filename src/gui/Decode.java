@@ -6,6 +6,7 @@
 package gui;
 
 import crypto.AES;
+import crypto.RSA;
 import stegano.LSB;
 import stegano.dct.net.f5.Extract;
 
@@ -270,8 +271,8 @@ public class Decode extends javax.swing.JPanel {
                     Extract.main(str.split(" "));
                     File file = new File("output.txt");
                     Scanner scanner = new Scanner(file);
-                    while(scanner.hasNextLine()){
-                        encryptedMessage+=scanner.nextLine();
+                    while (scanner.hasNextLine()) {
+                        encryptedMessage += scanner.nextLine();
                     }
                     scanner.close();
                     file.delete();
@@ -285,16 +286,20 @@ public class Decode extends javax.swing.JPanel {
 
         // Message Decryption
         String decryptedMessage = "";
-        switch (cryptoMethod) {
-            case "AES":
-                decryptedMessage = AES.decrypt(encryptedMessage, secretKey);
-                break;
-            case "RSA":
-                decryptedMessage = encryptedMessage;
-                break;
-            default:
-                decryptedMessage = encryptedMessage;
-                break;
+        try {
+            switch (cryptoMethod) {
+                case "AES":
+                    decryptedMessage = AES.decrypt(encryptedMessage, secretKey);
+                    break;
+                case "RSA":
+                    decryptedMessage = RSA.decrypt(encryptedMessage, secretKey);
+                    break;
+                default:
+                    decryptedMessage = encryptedMessage;
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // Display Message

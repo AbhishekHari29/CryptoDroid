@@ -6,6 +6,7 @@
 package gui;
 
 import crypto.AES;
+import crypto.RSA;
 import javax.swing.JOptionPane;
 
 /**
@@ -184,16 +185,20 @@ public class Decrypt extends javax.swing.JPanel {
 
         //Message Encryption
         String originalMessage = "";
-        switch (cryptoMethod) {
-            case "AES":
-                originalMessage = AES.decrypt(message, secretKey);
-                break;
-            case "RSA":
-                originalMessage = message;
-                break;
-            default:
-                originalMessage = message;
-                break;
+        try {
+            switch (cryptoMethod) {
+                case "AES":
+                    originalMessage = AES.decrypt(message, secretKey);
+                    break;
+                case "RSA":
+                    originalMessage = RSA.decrypt(message, secretKey);
+                    break;
+                default:
+                    originalMessage = message;
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         //Display Message
@@ -208,7 +213,7 @@ public class Decrypt extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_decryptButtonActionPerformed
 
-    public void setActionListenerBackButton(java.awt.event.ActionListener actionListener){
+    public void setActionListenerBackButton(java.awt.event.ActionListener actionListener) {
         backButton.addActionListener(actionListener);
     }
 

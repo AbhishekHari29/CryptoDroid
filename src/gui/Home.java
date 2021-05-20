@@ -38,6 +38,7 @@ public class Home extends javax.swing.JPanel {
         gotoDecryptButton = new javax.swing.JButton();
         gotoEncryptButton = new javax.swing.JButton();
         gotoDecodeButton = new javax.swing.JButton();
+        gotoKeyGeneratorButton = new javax.swing.JButton();
 
         greetingLabel.setFont(new java.awt.Font("Georgia", 1, 24)); // NOI18N
         greetingLabel.setText("Welcome to CryptoDroid");
@@ -50,6 +51,11 @@ public class Home extends javax.swing.JPanel {
         });
 
         exitButton.setText("Exit");
+        exitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitButtonActionPerformed(evt);
+            }
+        });
 
         gotoDecryptButton.setText("Decrypt Text");
 
@@ -61,6 +67,8 @@ public class Home extends javax.swing.JPanel {
                 gotoDecodeButtonActionPerformed(evt);
             }
         });
+
+        gotoKeyGeneratorButton.setText("Key Generator");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -75,7 +83,8 @@ public class Home extends javax.swing.JPanel {
                             .addComponent(gotoEncryptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(gotoDecryptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(gotoEncodeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(gotoEncodeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(gotoKeyGeneratorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(56, 56, 56))
                     .addComponent(greetingLabel, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(246, 246, 246))
@@ -93,15 +102,21 @@ public class Home extends javax.swing.JPanel {
                 .addComponent(gotoEncryptButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(gotoDecryptButton)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(gotoKeyGeneratorButton)
+                .addGap(33, 33, 33)
                 .addComponent(exitButton)
-                .addContainerGap(128, Short.MAX_VALUE))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void gotoDecodeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gotoDecodeButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_gotoDecodeButtonActionPerformed
+
+    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exitButtonActionPerformed
 
     private void gotoEncodeButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         // TODO add your handling code here:
@@ -123,9 +138,15 @@ public class Home extends javax.swing.JPanel {
         gotoDecryptButton.addActionListener(actionListener);
     }
     
+    public void setActionListenerKeyGeneratorButton(ActionListener actionListener){
+        gotoKeyGeneratorButton.addActionListener(actionListener);
+    }
+    
     public void setActionListenerExitButton(ActionListener actionListener){
         exitButton.addActionListener(actionListener);
     }
+    
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton exitButton;
@@ -133,6 +154,7 @@ public class Home extends javax.swing.JPanel {
     private javax.swing.JButton gotoDecryptButton;
     private javax.swing.JButton gotoEncodeButton;
     private javax.swing.JButton gotoEncryptButton;
+    private javax.swing.JButton gotoKeyGeneratorButton;
     private javax.swing.JLabel greetingLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -6,6 +6,7 @@
 package gui;
 
 import crypto.AES;
+import crypto.RSA;
 import stegano.LSB;
 import stegano.dct.net.f5.Embed;
 
@@ -271,16 +272,20 @@ public class Encode extends javax.swing.JPanel {
 
         //Message Encryption
         String encryptedMessage = "";
-        switch (cryptoMethod) {
-            case "AES":
-                encryptedMessage = AES.encrypt(message, secretKey);
-                break;
-            case "RSA":
-                encryptedMessage = message;
-                break;
-            default:
-                encryptedMessage = message;
-                break;
+        try {
+            switch (cryptoMethod) {
+                case "AES":
+                    encryptedMessage = AES.encrypt(message, secretKey);
+                    break;
+                case "RSA":
+                    encryptedMessage = RSA.encrypt(message, secretKey);
+                    break;
+                default:
+                    encryptedMessage = message;
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         //Image Encoding
@@ -310,7 +315,7 @@ public class Encode extends javax.swing.JPanel {
                 }
             } else {
                 System.out.println("File format not supported");
-                    JOptionPane.showMessageDialog(this, "File format not supported", "Alert", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "File format not supported", "Alert", JOptionPane.WARNING_MESSAGE);
             }
 
         }

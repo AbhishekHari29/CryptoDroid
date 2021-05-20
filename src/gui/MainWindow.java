@@ -40,6 +40,7 @@ public class MainWindow extends javax.swing.JFrame {
         decodeMenuItem = new javax.swing.JMenuItem();
         encryptMenuItem = new javax.swing.JMenuItem();
         decryptMenuItem = new javax.swing.JMenuItem();
+        keyGeneratorMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
@@ -93,6 +94,14 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
         fileMenu.add(decryptMenuItem);
+
+        keyGeneratorMenuItem.setText("Key Generator");
+        keyGeneratorMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                keyGeneratorMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(keyGeneratorMenuItem);
         fileMenu.add(jSeparator1);
 
         exitMenuItem.setText("Exit");
@@ -139,6 +148,10 @@ public class MainWindow extends javax.swing.JFrame {
         openDecryptPage();
     }//GEN-LAST:event_decryptMenuItemActionPerformed
 
+    private void keyGeneratorMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keyGeneratorMenuItemActionPerformed
+        openKeyGeneratorPage();
+    }//GEN-LAST:event_keyGeneratorMenuItemActionPerformed
+
     private void encodeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_encodeMenuItemActionPerformed
         openEncodePage();
 
@@ -171,6 +184,9 @@ public class MainWindow extends javax.swing.JFrame {
         });
         home1.setActionListenerDecryptButton((ActionEvent ae) -> {
             openDecryptPage();
+        });
+        home1.setActionListenerKeyGeneratorButton((ActionEvent ae) -> {
+            openKeyGeneratorPage();
         });
         home1.setActionListenerExitButton((ActionEvent ae) -> {
             exitApplication();
@@ -207,6 +223,15 @@ public class MainWindow extends javax.swing.JFrame {
             openHomePage();
         });
         setContentPane(decryptPanel);
+    }
+
+    private void openKeyGeneratorPage() {
+        KeyGenerator keyGeneratorPanel = new gui.KeyGenerator();
+        keyGeneratorPanel.setActionListenerBackButton((ActionEvent ae) -> {
+            openHomePage();
+        });
+        setContentPane(keyGeneratorPanel);
+
     }
 
     private void exitApplication() {
@@ -273,5 +298,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JMenuItem keyGeneratorMenuItem;
     // End of variables declaration//GEN-END:variables
 }

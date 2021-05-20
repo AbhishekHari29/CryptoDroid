@@ -6,6 +6,14 @@
 package gui;
 
 import crypto.AES;
+import crypto.RSA;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.swing.JOptionPane;
 
 /**
@@ -184,16 +192,20 @@ public class Encrypt extends javax.swing.JPanel {
 
         //Message Encryption
         String encryptedMessage = "";
-        switch (cryptoMethod) {
-            case "AES":
-                encryptedMessage = AES.encrypt(message, secretKey);
-                break;
-            case "RSA":
-                encryptedMessage = message;
-                break;
-            default:
-                encryptedMessage = message;
-                break;
+        try {
+            switch (cryptoMethod) {
+                case "AES":
+                    encryptedMessage = AES.encrypt(message, secretKey);
+                    break;
+                case "RSA":
+                    encryptedMessage = RSA.encrypt(message, secretKey);
+                    break;
+                default:
+                    encryptedMessage = message;
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         //Display Message
@@ -208,7 +220,7 @@ public class Encrypt extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_encryptButtonActionPerformed
 
-    public void setActionListenerBackButton(java.awt.event.ActionListener actionListener){
+    public void setActionListenerBackButton(java.awt.event.ActionListener actionListener) {
         backButton.addActionListener(actionListener);
     }
 
