@@ -7,6 +7,7 @@ package gui;
 
 import crypto.AES;
 import crypto.RSA;
+import crypto.RSAUtil;
 import stegano.LSB;
 import stegano.dct.net.f5.Embed;
 
@@ -271,13 +272,14 @@ public class Encode extends javax.swing.JPanel {
         fileExt = fileExt.toLowerCase();
 
         //Message Encryption
-        String encryptedMessage = "";
+        String encryptedMessage = message;
         try {
             switch (cryptoMethod) {
                 case "AES":
                     encryptedMessage = AES.encrypt(message, secretKey);
                     break;
                 case "RSA":
+                    // encryptedMessage = RSAUtil.encrypt(message, secretKey);
                     encryptedMessage = RSA.encrypt(message, secretKey);
                     break;
                 default:
@@ -285,6 +287,8 @@ public class Encode extends javax.swing.JPanel {
                     break;
             }
         } catch (Exception e) {
+            System.out.println("Something went wrong in Encryption");
+            JOptionPane.showMessageDialog(this, "Something went wrong in Encryption", "Alert", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
         }
 

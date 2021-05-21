@@ -7,13 +7,7 @@ package gui;
 
 import crypto.AES;
 import crypto.RSA;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import crypto.RSAUtil;
 import javax.swing.JOptionPane;
 
 /**
@@ -191,13 +185,14 @@ public class Encrypt extends javax.swing.JPanel {
         }
 
         //Message Encryption
-        String encryptedMessage = "";
+        String encryptedMessage = message;
         try {
             switch (cryptoMethod) {
                 case "AES":
                     encryptedMessage = AES.encrypt(message, secretKey);
                     break;
                 case "RSA":
+                    //encryptedMessage = RSAUtil.encrypt(message, secretKey);
                     encryptedMessage = RSA.encrypt(message, secretKey);
                     break;
                 default:
@@ -205,6 +200,8 @@ public class Encrypt extends javax.swing.JPanel {
                     break;
             }
         } catch (Exception e) {
+            System.out.println("Something went wrong in Encryption");
+            JOptionPane.showMessageDialog(this, "Something went wrong in Encryption", "Alert", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
         }
 

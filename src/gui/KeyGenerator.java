@@ -5,6 +5,7 @@
  */
 package gui;
 
+import crypto.RSA;
 import crypto.RSAKeyPairGenerator;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -199,9 +200,12 @@ public class KeyGenerator extends javax.swing.JPanel {
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_generateButtonActionPerformed
 
         try {
-            RSAKeyPairGenerator keyPairGenerator = new RSAKeyPairGenerator();
-            publicKeyTextArea.setText(keyPairGenerator.getPublicKeyString());
-            privateKeyTextArea.setText(keyPairGenerator.getPrivateKeyString());
+//            RSAKeyPairGenerator keyPairGenerator = new RSAKeyPairGenerator();
+//            publicKeyTextArea.setText(keyPairGenerator.getPublicKeyString());
+//            privateKeyTextArea.setText(keyPairGenerator.getPrivateKeyString());
+            RSA rsa = new RSA();
+            publicKeyTextArea.setText(rsa.getPublicKeyString());
+            privateKeyTextArea.setText(rsa.getPrivateKeyString());
             System.out.println("Keys have been generated Successfully");
             JOptionPane.showMessageDialog(this, "Keys have been generated Successfully", "Success",
                     JOptionPane.INFORMATION_MESSAGE);
@@ -260,8 +264,9 @@ public class KeyGenerator extends javax.swing.JPanel {
         File privateKeyFile = new File(destination + "/PrivateKey.txt");
         int index = 1;
         while (publicKeyFile.exists() || privateKeyFile.exists()) {
-            publicKeyFile = new File(destination + "/PublicKey (" + index++ + ").txt");
-            privateKeyFile = new File(destination + "/PrivateKey (" + index++ + ").txt");
+            publicKeyFile = new File(destination + "/PublicKey (" + index + ").txt");
+            privateKeyFile = new File(destination + "/PrivateKey (" + index + ").txt");
+            index++;
             if (index > 100) {
                 System.exit(0);
             }

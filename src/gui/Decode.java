@@ -7,6 +7,7 @@ package gui;
 
 import crypto.AES;
 import crypto.RSA;
+import crypto.RSAUtil;
 import stegano.LSB;
 import stegano.dct.net.f5.Extract;
 
@@ -285,13 +286,14 @@ public class Decode extends javax.swing.JPanel {
         }
 
         // Message Decryption
-        String decryptedMessage = "";
+        String decryptedMessage = encryptedMessage;
         try {
             switch (cryptoMethod) {
                 case "AES":
                     decryptedMessage = AES.decrypt(encryptedMessage, secretKey);
                     break;
                 case "RSA":
+                    //originalMessage = RSAUtil.decrypt(message, secretKey);
                     decryptedMessage = RSA.decrypt(encryptedMessage, secretKey);
                     break;
                 default:
@@ -299,6 +301,8 @@ public class Decode extends javax.swing.JPanel {
                     break;
             }
         } catch (Exception e) {
+            System.out.println("Something went wrong in Decryption");
+            JOptionPane.showMessageDialog(this, "Something went wrong in Decryption", "Alert", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
         }
 

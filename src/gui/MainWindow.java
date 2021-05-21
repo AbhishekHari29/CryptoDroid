@@ -43,8 +43,8 @@ public class MainWindow extends javax.swing.JFrame {
         keyGeneratorMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
         helpMenu = new javax.swing.JMenu();
+        userManualMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(500, 200));
@@ -114,10 +114,16 @@ public class MainWindow extends javax.swing.JFrame {
 
         jMenuBar1.add(fileMenu);
 
-        editMenu.setText("Edit");
-        jMenuBar1.add(editMenu);
-
         helpMenu.setText("Help");
+
+        userManualMenuItem.setText("User Manual");
+        userManualMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                userManualMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(userManualMenuItem);
+
         jMenuBar1.add(helpMenu);
 
         setJMenuBar(jMenuBar1);
@@ -151,6 +157,13 @@ public class MainWindow extends javax.swing.JFrame {
     private void keyGeneratorMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keyGeneratorMenuItemActionPerformed
         openKeyGeneratorPage();
     }//GEN-LAST:event_keyGeneratorMenuItemActionPerformed
+
+    private void userManualMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userManualMenuItemActionPerformed
+        UserManual userManual = new UserManual();
+        userManual.setVisible(true);
+        userManual.setLocation(510, 210);
+        
+    }//GEN-LAST:event_userManualMenuItemActionPerformed
 
     private void encodeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_encodeMenuItemActionPerformed
         openEncodePage();
@@ -287,7 +300,6 @@ public class MainWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem decodeMenuItem;
     private javax.swing.JMenuItem decryptMenuItem;
-    private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem encodeMenuItem;
     private javax.swing.JMenuItem encryptMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
@@ -299,5 +311,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JMenuItem keyGeneratorMenuItem;
+    private javax.swing.JMenuItem userManualMenuItem;
     // End of variables declaration//GEN-END:variables
 }

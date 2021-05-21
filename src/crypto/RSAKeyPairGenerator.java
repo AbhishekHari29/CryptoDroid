@@ -12,8 +12,10 @@ public class RSAKeyPairGenerator {
     private final PublicKey publicKey;
 
     public RSAKeyPairGenerator() throws NoSuchAlgorithmException {
+        
+        SecureRandom random = new SecureRandom();
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-        keyGen.initialize(1024);
+        keyGen.initialize(1024, random);
         KeyPair pair = keyGen.generateKeyPair();
         this.privateKey = pair.getPrivate();
         this.publicKey = pair.getPublic();
@@ -23,10 +25,10 @@ public class RSAKeyPairGenerator {
         File f = new File(path);
         f.getParentFile().mkdirs();
 
-        FileOutputStream fos = new FileOutputStream(f);
-        fos.write(key);
-        fos.flush();
-        fos.close();
+        try (FileOutputStream fos = new FileOutputStream(f)) {
+            fos.write(key);
+            fos.flush();
+        }
     }
 
     public PrivateKey getPrivateKey() {
@@ -49,8 +51,8 @@ public class RSAKeyPairGenerator {
         RSAKeyPairGenerator keyPairGenerator = new RSAKeyPairGenerator();
 //        keyPairGenerator.writeToFile("RSA/publicKey", keyPairGenerator.getPublicKey().getEncoded());
 //        keyPairGenerator.writeToFile("RSA/privateKey", keyPairGenerator.getPrivateKey().getEncoded());
-        keyPairGenerator.writeToFile("RSA/publicKey.txt", keyPairGenerator.getPublicKeyString().getBytes());
-        keyPairGenerator.writeToFile("RSA/privateKey.txt", keyPairGenerator.getPrivateKeyString().getBytes());
+//        keyPairGenerator.writeToFile("RSA/publicKey.txt", keyPairGenerator.getPublicKeyString().getBytes());
+//        keyPairGenerator.writeToFile("RSA/privateKey.txt", keyPairGenerator.getPrivateKeyString().getBytes());
         System.out.println(Base64.getEncoder().encodeToString(keyPairGenerator.getPublicKey().getEncoded()));
         System.out.println(Base64.getEncoder().encodeToString(keyPairGenerator.getPrivateKey().getEncoded()));
     }

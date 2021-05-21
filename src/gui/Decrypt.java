@@ -7,6 +7,7 @@ package gui;
 
 import crypto.AES;
 import crypto.RSA;
+import crypto.RSAUtil;
 import javax.swing.JOptionPane;
 
 /**
@@ -184,13 +185,14 @@ public class Decrypt extends javax.swing.JPanel {
         }
 
         //Message Encryption
-        String originalMessage = "";
+        String originalMessage = message;
         try {
             switch (cryptoMethod) {
                 case "AES":
                     originalMessage = AES.decrypt(message, secretKey);
                     break;
                 case "RSA":
+                    //originalMessage = RSAUtil.decrypt(message, secretKey);
                     originalMessage = RSA.decrypt(message, secretKey);
                     break;
                 default:
@@ -198,6 +200,8 @@ public class Decrypt extends javax.swing.JPanel {
                     break;
             }
         } catch (Exception e) {
+            System.out.println("Something went wrong in Decryption");
+            JOptionPane.showMessageDialog(this, "Something went wrong in Decryption", "Alert", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
         }
 

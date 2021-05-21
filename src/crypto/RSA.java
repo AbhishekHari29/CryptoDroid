@@ -1,72 +1,154 @@
 package crypto;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+import java.math.BigInteger;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.Base64;
 
 public class RSA {
+    private final BigInteger N;
+    private final BigInteger e;
+    private final BigInteger d;
+    private final int bitlength = 256;
 
-    public static PublicKey getPublicKey(String base64PublicKey) {
-        PublicKey publicKey = null;
-        try {
-            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(base64PublicKey.getBytes()));
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            publicKey = keyFactory.generatePublic(keySpec);
-            return publicKey;
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
+    public RSA() {
+        Random r = new Random();
+        BigInteger p = BigInteger.probablePrime(bitlength, r);
+        BigInteger q = BigInteger.probablePrime(bitlength, r);
+        N = p.multiply(q);
+        BigInteger phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
+        e = BigInteger.probablePrime(bitlength / 2, r);
+        while (phi.gcd(e).compareTo(BigInteger.ONE) > 0 && e.compareTo(phi) < 0) {
+            e.add(BigInteger.ONE);
         }
-        return publicKey;
+        d = e.modInverse(phi);
     }
 
-    public static PrivateKey getPrivateKey(String base64PrivateKey) {
-        PrivateKey privateKey = null;
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(base64PrivateKey.getBytes()));
-        KeyFactory keyFactory = null;
-        try {
-            keyFactory = KeyFactory.getInstance("RSA");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        try {
-            privateKey = keyFactory.generatePrivate(keySpec);
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
-        return privateKey;
+    public RSA(BigInteger e, BigInteger d, BigInteger N) {
+        this.e = e;
+        this.d = d;
+        this.N = N;
     }
 
-    public static String encrypt(String data, String publicKey) throws BadPaddingException, IllegalBlockSizeException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
-        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, getPublicKey(publicKey));
-        byte[] cipherBytes = cipher.doFinal(data.getBytes());
-        return Base64.getEncoder().encodeToString(cipherBytes);
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        boolean end = false;
+        String message, encryptedMessage, decryptedMessage, publicKey, privateKey;
+        RSA rsa = null;
+        do {
+            System.out.println("Select Operation: \n\t1 -> Key Generator\n\t2 -> Cryptography\n\t3 -> Exit");
+            String selection = scanner.nextLine();
+            switch (selection){
+                case "1":
+                    rsa = new RSA();
+                    System.out.println("Public Key: "+rsa.getPublicKeyString());
+                    System.out.println("Private Key: "+rsa.getPrivateKeyString());
+                    break;
+                case "2":
+                    System.out.println("Select Operation: \n\t1 -> Encrypt\n\t2 -> Decrypt\n\t3 -> Exit");
+                    selection = scanner.nextLine();
+                    switch (selection){
+                        case "1":
+                            System.out.println("Enter PublicKey: ");
+                            publicKey = scanner.nextLine();
+                            System.out.println("Enter Message: ");
+                            message = scanner.nextLine();
+                            encryptedMessage = RSA.encrypt(message, publicKey);
+                            System.out.println("Encrypted Message: "+encryptedMessage);
+                            break;
+                        case "2":
+                            System.out.println("Enter PrivateKey: ");
+                            privateKey = scanner.nextLine();
+                            System.out.println("Enter EncryptedMessage: ");
+                            encryptedMessage = scanner.nextLine();
+                            decryptedMessage = RSA.decrypt(encryptedMessage, privateKey);
+                            System.out.println("Original Message: "+decryptedMessage);
+                            break;
+                        case "3":
+                            end = true;
+                            break;
+                        default:
+                            System.out.println("Invalid selection...Try again");
+                            break;
+                    }
+                    break;
+                case "3":
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid selection...Try again");
+                    break;
+            }
+        }while (!end);
 
+
+
+
+
+
+
+
+
+//        RSA rsa = new RSA();
+//        Scanner scanner = new Scanner(System.in);
+//        String teststring;
+//        System.out.println("Enter the plain text:");
+//        teststring = scanner.nextLine();
+//        System.out.println("original Message: " + teststring);
+//        System.out.println();
+//
+//        // Public Key
+//        System.out.println("Public Key: " + rsa.e + " , " + rsa.N);
+//
+//        // Private Key
+//        System.out.println("Private Key: " + rsa.d + " , " + rsa.N);
+//
+//        // encrypt
+//        byte[] encrypted = rsa.encrypt(teststring.getBytes());
+//        String encryptedString = Base64.getEncoder().encodeToString(encrypted);
+//        System.out.println("Encrypted Message: " + encryptedString);
+//        System.out.println();
+//
+//        // decrypt
+//        byte[] decrypted = rsa.decrypt(Base64.getDecoder().decode(encryptedString.getBytes()));
+//        System.out.println("Decrypted String: " + new String(decrypted));
+//        System.out.println();
+//        scanner.close();
     }
 
-    public static String decrypt(byte[] data, PrivateKey privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-        cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        return new String(cipher.doFinal(data));
+    // Encrypt message
+    public byte[] encrypt(byte[] message) {
+        return (new BigInteger(message)).modPow(e, N).toByteArray();
     }
 
-    public static String decrypt(String data, String base64PrivateKey) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
-        return decrypt(Base64.getDecoder().decode(data.getBytes()), getPrivateKey(base64PrivateKey));
+    // Decrypt message
+    public byte[] decrypt(byte[] message) {
+        return (new BigInteger(message)).modPow(d, N).toByteArray();
     }
 
-    public static void main(String[] args) throws IllegalBlockSizeException, InvalidKeyException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException {
+    public String getPublicKeyString() {
+        return e.toString() + " , " + N.toString();
+    }
 
-        RSAKeyPairGenerator keyPairGenerator = new RSAKeyPairGenerator();
-        String encryptedString = encrypt("Dhiraj is the author", keyPairGenerator.getPublicKeyString());
-        System.out.println(encryptedString);
-        String decryptedString = RSA.decrypt(encryptedString, keyPairGenerator.getPrivateKeyString());
-        System.out.println(decryptedString);
+    public String getPrivateKeyString() {
+        return d.toString() + " , " + N.toString();
+    }
 
+    public static String encrypt(String message, String publicKey) {
+        String[] arr = publicKey.split(" , ");
+        BigInteger e = new BigInteger(arr[0]);
+        BigInteger N = new BigInteger(arr[1]);
+        RSA rsa = new RSA(e, new BigInteger("0"), N);
+        byte[] encrypted = rsa.encrypt(message.getBytes());
+        return Base64.getEncoder().encodeToString(encrypted);
+    }
+
+    public static String decrypt(String encryptedMessage, String publicKey) {
+        String[] arr = publicKey.split(" , ");
+        BigInteger d = new BigInteger(arr[0]);
+        BigInteger N = new BigInteger(arr[1]);
+        RSA rsa = new RSA(new BigInteger("0"), d, N);
+        byte[] decrypted = rsa.decrypt(Base64.getDecoder().decode(encryptedMessage.getBytes()));
+        return new String(decrypted);
     }
 }
