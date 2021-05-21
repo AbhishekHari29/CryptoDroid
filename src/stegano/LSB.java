@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package stegano;
 
 import java.io.File;
@@ -105,7 +100,7 @@ public class LSB {
         byte byte1 = (byte) ((i & 0x0000FF00) >>> 8); // 0
         byte byte0 = (byte) ((i & 0x000000FF));
         // {0,0,0,byte0} is equivalent, since all shifts >=8 will be 0
-        return (new byte[]{byte3, byte2, byte1, byte0});
+        return (new byte[] { byte3, byte2, byte1, byte0 });
     }
 
     private static byte[] encode_text(byte[] image, byte[] addition, int offset) {

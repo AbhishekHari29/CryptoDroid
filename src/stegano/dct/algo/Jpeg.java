@@ -1,11 +1,4 @@
-// Copyright (C) 1998, James R. Weeks and BioElectroMech.
-// Visit BioElectroMech at www.obrador.com. Email James@obrador.com.
-
-// This software is based in part on the work of the Independent JPEG Group.
-// See license.txt for details about the allowed used of this software.
-// See IJGreadme.txt for details about the Independent JPEG Group's license.
-
-package stegano.dct.algo; // westfeld
+package stegano.dct.algo;
 
 import java.awt.Image;
 import java.awt.Toolkit;

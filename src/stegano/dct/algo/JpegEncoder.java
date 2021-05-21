@@ -1,22 +1,3 @@
-// Version 1.0a
-// Copyright (C) 1998, James R. Weeks and BioElectroMech.
-// Visit BioElectroMech at www.obrador.com. Email James@obrador.com.
-
-// See license.txt for details about the allowed used of this software.
-// This software is based in part on the work of the Independent JPEG Group.
-// See IJGreadme.txt for details about the Independent JPEG Group's license.
-
-// This encoder is inspired by the Java Jpeg encoder by Florian Raemy,
-// studwww.eurecom.fr/~raemy.
-// It borrows a great deal of code and structure from the Independent
-// Jpeg Group's Jpeg 6a library, Copyright Thomas G. Lane.
-// See license.txt for details.
-
-// westfeld
-// todo:
-// switch for multi-volume embedding
-// indeterministic embedding
-// password switch
 package stegano.dct.algo;
 
 import java.awt.Frame;
@@ -30,12 +11,7 @@ import java.io.OutputStream;
 import stegano.dct.net.f5.crypt.F5Random;
 import stegano.dct.net.f5.crypt.Permutation;
 
-/**
- * JpegEncoder - The JPEG main program which performs a jpeg compression of an
- * image.
- */
-@SuppressWarnings({
-        "unused", "serial" })
+@SuppressWarnings({ "unused", "serial" })
 public class JpegEncoder extends Frame {
     Thread runner;
 
@@ -55,10 +31,9 @@ public class JpegEncoder extends Frame {
 
     int code;
 
-    public static int[] jpegNaturalOrder = {
-            0, 1, 8, 16, 9, 2, 3, 10, 17, 24, 32, 25, 18, 11, 4, 5, 12, 19, 26, 33, 40, 48, 41, 34, 27, 20, 13, 6, 7,
-            14, 21, 28, 35, 42, 49, 56, 57, 50, 43, 36, 29, 22, 15, 23, 30, 37, 44, 51, 58, 59, 52, 45, 38, 31, 39, 46,
-            53, 60, 61, 54, 47, 55, 62, 63, };
+    public static int[] jpegNaturalOrder = { 0, 1, 8, 16, 9, 2, 3, 10, 17, 24, 32, 25, 18, 11, 4, 5, 12, 19, 26, 33, 40,
+            48, 41, 34, 27, 20, 13, 6, 7, 14, 21, 28, 35, 42, 49, 56, 57, 50, 43, 36, 29, 22, 15, 23, 30, 37, 44, 51,
+            58, 59, 52, 45, 38, 31, 39, 46, 53, 60, 61, 54, 47, 55, 62, 63, };
 
     // westfeld
     InputStream embeddedData = null;
@@ -76,14 +51,14 @@ public class JpegEncoder extends Frame {
             // Got to do something?
         }
         /*
-         * Quality of the image. 0 to 100 and from bad image quality, high
-         * compression to good image quality low compression
+         * Quality of the image. 0 to 100 and from bad image quality, high compression
+         * to good image quality low compression
          */
         this.Quality = quality;
 
         /*
-         * Getting picture information It takes the Width, Height and RGB scans
-         * of the image.
+         * Getting picture information It takes the Width, Height and RGB scans of the
+         * image.
          */
         this.JpegObj = new JpegInfo(image, comment);
 
@@ -140,12 +115,6 @@ public class JpegEncoder extends Frame {
         double dctArray2[][] = new double[8][8];
         int dctArray3[] = new int[8 * 8];
 
-        /*
-         * This method controls the compression of the image. Starting at the
-         * upper left of the image, it compresses 8x8 blocks of data until the
-         * entire image has been compressed.
-         */
-
         final int lastDCvalue[] = new int[this.JpegObj.NumberOfComponents];
         final int zeroArray[] = new int[64]; // initialized to hold all zeros
         int Width = 0, Height = 0;
@@ -197,15 +166,6 @@ public class JpegEncoder extends Frame {
                             for (a = 0; a < 8; a++) {
                                 for (b = 0; b < 8; b++) {
 
-                                    // I believe this is where the dirty line at
-                                    // the bottom of the image is
-                                    // coming from. I need to do a check here to
-                                    // make sure I'm not reading past
-                                    // image data.
-                                    // This seems to not be a big issue right
-                                    // now. (04/04/98)
-
-                                    // westfeld - dirty line fixed, Jun 6 2000
                                     int ia = ypos * this.JpegObj.VsampFactor[comp] + yblockoffset + a;
                                     int ib = xpos * this.JpegObj.HsampFactor[comp] + xblockoffset + b;
                                     if (this.imageHeight / 2 * this.JpegObj.VsampFactor[comp] <= ia) {
@@ -214,32 +174,11 @@ public class JpegEncoder extends Frame {
                                     if (this.imageWidth / 2 * this.JpegObj.HsampFactor[comp] <= ib) {
                                         ib = this.imageWidth / 2 * this.JpegObj.HsampFactor[comp] - 1;
                                     }
-                                    // dctArray1[a][b] = inputArray[ypos +
-                                    // yblockoffset + a][xpos + xblockoffset +
-                                    // b];
                                     dctArray1[a][b] = inputArray[ia][ib];
                                 }
                             }
-                            // The following code commented out because on some
-                            // images this technique
-                            // results in poor right and bottom borders.
-                            // if ((!JpegObj.lastColumnIsDummy[comp] || c <
-                            // Width - 1) && (!JpegObj.lastRowIsDummy[comp] || r
-                            // < Height - 1)) {
                             dctArray2 = this.dct.forwardDCT(dctArray1);
                             dctArray3 = this.dct.quantizeBlock(dctArray2, this.JpegObj.QtableNumber[comp]);
-                            // }
-                            // else {
-                            // zeroArray[0] = dctArray3[0];
-                            // zeroArray[0] = lastDCvalue[comp];
-                            // dctArray3 = zeroArray;
-                            // }
-                            // westfeld
-                            // For steganography, all dct
-                            // coefficients are collected in
-                            // coeff[] first. We do not encode
-                            // any Huffman Blocks here (we'll do
-                            // this later).
                             System.arraycopy(dctArray3, 0, coeff, shuffledIndex, 64);
                             shuffledIndex += 64;
 
@@ -299,11 +238,10 @@ public class JpegEncoder extends Frame {
             } else {
                 System.out.print("(1, " + n + ", " + i + ")");
             }
-            System.out.println(" code: " + usable + " bytes (efficiency: " + usable * 8 / changed + "." + usable * 80
-                    / changed % 10 + " bits per change)");
+            System.out.println(" code: " + usable + " bytes (efficiency: " + usable * 8 / changed + "."
+                    + usable * 80 / changed % 10 + " bits per change)");
         }
 
-        // westfeld
         if (this.embeddedData != null) {
             // Now we embed the secret data in the permutated sequence.
             System.out.println("Permutation starts");
@@ -312,17 +250,12 @@ public class JpegEncoder extends Frame {
             int nextBitToEmbed = 0;
             int byteToEmbed = 0;
             int availableBitsToEmbed = 0;
-            // We start with the length information. Well,
-            // the length information it is more than one
-            // byte, so this first "byte" is 32 bits long.
             try {
                 byteToEmbed = this.embeddedData.available();
             } catch (final Exception e) {
                 e.printStackTrace();
             }
             System.out.print("Embedding of " + (byteToEmbed * 8 + 32) + " bits (" + byteToEmbed + "+4 bytes) ");
-            // We use the most significant byte for the 1 of n
-            // code, and reserve one extra bit for future use.
             if (byteToEmbed > 0x007fffff) {
                 byteToEmbed = 0x007fffff;
             }
@@ -343,21 +276,17 @@ public class JpegEncoder extends Frame {
             final int k = i - 1;
             this.n = (1 << k) - 1;
             switch (this.n) {
-            case 0:
-                System.out.println("using default code, file will not fit");
-                this.n++;
-                break;
-            case 1:
-                System.out.println("using default code");
-                break;
-            default:
-                System.out.println("using (1, " + this.n + ", " + k + ") code");
+                case 0:
+                    System.out.println("using default code, file will not fit");
+                    this.n++;
+                    break;
+                case 1:
+                    System.out.println("using default code");
+                    break;
+                default:
+                    System.out.println("using (1, " + this.n + ", " + k + ") code");
             }
             byteToEmbed |= k << 24; // store k in the status word
-            // Since shuffling cannot hide the distribution, the
-            // distribution of all bits to embed is unified by
-            // adding a pseudo random bit-string. We continue the random
-            // we used for Permutation, initially seeked with password.
             byteToEmbed ^= random.getNextByte();
             byteToEmbed ^= random.getNextByte() << 8;
             byteToEmbed ^= random.getNextByte() << 16;
@@ -395,9 +324,6 @@ public class JpegEncoder extends Frame {
                         }
                     }
                     if (coeff[shuffledIndex] != 0) {
-                        // The coefficient is still nonzero. We
-                        // successfully embedded "nextBitToEmbed".
-                        // We will read a new bit to embed now.
                         if (availableBitsToEmbed == 0) {
                             break; // statusword embedded.
                         }
@@ -487,9 +413,7 @@ public class JpegEncoder extends Frame {
                     } while (coeff[codeWord[i]] == 0);
                     startOfN = endOfN;
                 } while (!isLastByte);
-            } else { // default code
-                // The main embedding loop follows. It works on the
-                // shuffled stream of coefficients.
+            } else {
                 for (i = 0; i < coeffCount; i++) {
                     shuffledIndex = permutation.getShuffled(i);
                     if (shuffledIndex % 64 == 0) {
@@ -511,12 +435,7 @@ public class JpegEncoder extends Frame {
                         }
                     }
                     if (coeff[shuffledIndex] != 0) {
-                        // The coefficient is still nonzero. We
-                        // successfully embedded "nextBitToEmbed".
-                        // We will read a new bit to embed now.
                         if (availableBitsToEmbed == 0) {
-                            // If the byte of embedded text is
-                            // empty, we will get a new one.
                             try {
                                 if (this.embeddedData.available() == 0) {
                                     break;
@@ -569,8 +488,7 @@ public class JpegEncoder extends Frame {
     }
 
     public void WriteEOI(final BufferedOutputStream out) {
-        final byte[] EOI = {
-                (byte) 0xFF, (byte) 0xD9 };
+        final byte[] EOI = { (byte) 0xFF, (byte) 0xD9 };
         WriteMarker(EOI, out);
     }
 
@@ -579,8 +497,7 @@ public class JpegEncoder extends Frame {
         int tempArray[];
 
         // the SOI marker
-        final byte[] SOI = {
-                (byte) 0xFF, (byte) 0xD8 };
+        final byte[] SOI = { (byte) 0xFF, (byte) 0xD8 };
         WriteMarker(SOI, out);
 
         // The order of the following headers is quiet inconsequential.

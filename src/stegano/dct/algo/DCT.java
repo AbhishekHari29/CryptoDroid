@@ -1,17 +1,3 @@
-// Version 1.0a
-// Copyright (C) 1998, James R. Weeks and BioElectroMech.
-// Visit BioElectroMech at www.obrador.com. Email James@obrador.com.
-
-// See license.txt for details about the allowed used of this software.
-// This software is based in part on the work of the Independent JPEG Group.
-// See IJGreadme.txt for details about the Independent JPEG Group's license.
-
-// This encoder is inspired by the Java Jpeg encoder by Florian Raemy,
-// studwww.eurecom.fr/~raemy.
-// It borrows a great deal of code and structure from the Independent
-// Jpeg Group's Jpeg 6a library, Copyright Thomas G. Lane.
-// See license.txt for details.
-
 package stegano.dct.algo;
 
 /**
@@ -47,22 +33,13 @@ class DCT {
 
     public double DivisorsChrominance[] = new double[this.N * this.N];
 
-    /**
-     * Constructs a new DCT object. Initializes the cosine transform matrix
-     * these are used when computing the DCT and it's inverse. This also
-     * initializes the run length counters and the ZigZag sequence. Note that
-     * the image quality can be worse than 25 however the image will be extemely
-     * pixelated, usually to a block size of N.
-     * 
-     * @param QUALITY The quality of the image (0 worst - 100 best)
-     */
     public DCT(final int QUALITY) {
         initMatrix(QUALITY);
     }
 
     /*
-     * This method preforms a DCT on a block of image data using the AAN method
-     * as implemented in the IJG Jpeg-6a library.
+     * This method preforms a DCT on a block of image data using the AAN method as
+     * implemented in the IJG Jpeg-6a library.
      */
     public double[][] forwardDCT(final float input[][]) {
         final double output[][] = new double[this.N][this.N];
@@ -164,17 +141,6 @@ class DCT {
         return output;
     }
 
-    /*
-     * This method preforms forward DCT on a block of image data using the
-     * literal method specified for a 2-D Discrete Cosine Transform. It is
-     * included as a curiosity and can give you an idea of the difference in the
-     * compression result (the resulting image quality) by comparing its output
-     * to the output of the AAN method below. It is ridiculously inefficient.
-     */
-
-    // For now the final output is unusable. The associated quantization step
-    // needs some tweaking. If you get this part working, please let me know.
-
     public double[][] forwardDCTExtreme(final float input[][]) {
         final double output[][] = new double[this.N][this.N];
         final double tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
@@ -198,22 +164,14 @@ class DCT {
         return output;
     }
 
-    /*
-     * This method sets up the quantization matrix for luminance and chrominance
-     * using the Quality parameter.
-     */
     private void initMatrix(final int quality) {
-        final double[] AANscaleFactor = {
-                1.0, 1.387039845, 1.306562965, 1.175875602, 1.0, 0.785694958, 0.541196100, 0.275899379 };
+        final double[] AANscaleFactor = { 1.0, 1.387039845, 1.306562965, 1.175875602, 1.0, 0.785694958, 0.541196100,
+                0.275899379 };
         int i;
         int j;
         int index;
         int Quality;
         int temp;
-
-        // converting quality setting to that specified in the
-        // jpeg_quality_scaling
-        // method in the IJG Jpeg-6a C libraries
 
         Quality = quality;
         if (Quality <= 0) {
@@ -317,8 +275,8 @@ class DCT {
                 // quantum_luminance[index]) << 3;
                 // The divisors for the AAN method (the float method used in
                 // jpeg 6a library.
-                this.DivisorsLuminance[index] = 1.0 / (this.quantum_luminance[index] * AANscaleFactor[i]
-                        * AANscaleFactor[j] * 8.0);
+                this.DivisorsLuminance[index] = 1.0
+                        / (this.quantum_luminance[index] * AANscaleFactor[i] * AANscaleFactor[j] * 8.0);
                 index++;
             }
         }
@@ -403,17 +361,8 @@ class DCT {
         index = 0;
         for (i = 0; i < 8; i++) {
             for (j = 0; j < 8; j++) {
-                // The divisors for the LL&M method (the slow integer method
-                // used in
-                // jpeg 6a library). This method is currently (04/04/98)
-                // incompletely
-                // implemented.
-                // DivisorsChrominance[index] = ((double)
-                // quantum_chrominance[index]) << 3;
-                // The divisors for the AAN method (the float method used in
-                // jpeg 6a library.
-                this.DivisorsChrominance[index] = 1.0 / (this.quantum_chrominance[index] * AANscaleFactor[i]
-                        * AANscaleFactor[j] * 8.0);
+                this.DivisorsChrominance[index] = 1.0
+                        / (this.quantum_chrominance[index] * AANscaleFactor[i] * AANscaleFactor[j] * 8.0);
                 index++;
             }
         }
@@ -449,8 +398,8 @@ class DCT {
     }
 
     /*
-     * This is the method for quantizing a block DCT'ed with forwardDCTExtreme
-     * This method quantitizes data and rounds it to the nearest integer.
+     * This is the method for quantizing a block DCT'ed with forwardDCTExtreme This
+     * method quantitizes data and rounds it to the nearest integer.
      */
     public int[] quantizeBlockExtreme(final double inputData[][], final int code) {
         final int outputData[] = new int[this.N * this.N];

@@ -1,27 +1,9 @@
-// Version 1.0a
-// Copyright (C) 1998, James R. Weeks and BioElectroMech.
-// Visit BioElectroMech at www.obrador.com. Email James@obrador.com.
-
-// See license.txt for details about the allowed used of this software.
-// This software is based in part on the work of the Independent JPEG Group.
-// See IJGreadme.txt for details about the Independent JPEG Group's license.
-
-// This encoder is inspired by the Java Jpeg encoder by Florian Raemy,
-// studwww.eurecom.fr/~raemy.
-// It borrows a great deal of code and structure from the Independent
-// Jpeg Group's Jpeg 6a library, Copyright Thomas G. Lane.
-// See license.txt for details.
-
 package stegano.dct.algo;
 
 import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.image.PixelGrabber;
 
-/**
- * JpegInfo - Given an image, sets default information about it and divides it
- * into its constituant components, downsizing those that need to be.
- */
 class JpegInfo {
     String Comment;
 
@@ -42,31 +24,23 @@ class JpegInfo {
 
     public Object Components[];
 
-    public int[] CompID = {
-            1, 2, 3 };
+    public int[] CompID = { 1, 2, 3 };
 
     // public int[] HsampFactor = {1, 1, 1};
     // public int[] VsampFactor = {1, 1, 1};
-    public int[] HsampFactor = {
-            2, 1, 1 };
+    public int[] HsampFactor = { 2, 1, 1 };
 
-    public int[] VsampFactor = {
-            2, 1, 1 };
+    public int[] VsampFactor = { 2, 1, 1 };
 
-    public int[] QtableNumber = {
-            0, 1, 1 };
+    public int[] QtableNumber = { 0, 1, 1 };
 
-    public int[] DCtableNumber = {
-            0, 1, 1 };
+    public int[] DCtableNumber = { 0, 1, 1 };
 
-    public int[] ACtableNumber = {
-            0, 1, 1 };
+    public int[] ACtableNumber = { 0, 1, 1 };
 
-    public boolean[] lastColumnIsDummy = {
-            false, false, false };
+    public boolean[] lastColumnIsDummy = { false, false, false };
 
-    public boolean[] lastRowIsDummy = {
-            false, false, false };
+    public boolean[] lastRowIsDummy = { false, false, false };
 
     public int Ss = 0;
 
@@ -92,7 +66,7 @@ class JpegInfo {
         this.imageWidth = image.getWidth(null);
         this.imageHeight = image.getHeight(null);
         // Comment =
-        // "JPEG Encoder Copyright 1998, James R. Weeks and BioElectroMech.  ";
+        // "JPEG Encoder Copyright 1998, James R. Weeks and BioElectroMech. ";
         this.Comment = comment;
         getYCCArray();
     }
@@ -135,14 +109,6 @@ class JpegInfo {
     private void getYCCArray() {
         final int values[] = new int[this.imageWidth * this.imageHeight];
         int r, g, b, y, x;
-        // In order to minimize the chance that grabPixels will throw an
-        // exception
-        // it may be necessary to grab some pixels every few scanlines and
-        // process
-        // those before going for more. The time expense may be prohibitive.
-        // However, for a situation where memory overhead is a concern, this may
-        // be
-        // the only choice.
         final PixelGrabber grabber = new PixelGrabber(this.imageobj.getSource(), 0, 0, this.imageWidth,
                 this.imageHeight, values, 0, this.imageWidth);
         this.MaxHsampFactor = 1;
@@ -157,10 +123,6 @@ class JpegInfo {
             if (this.compWidth[y] != this.imageWidth / this.MaxHsampFactor * this.HsampFactor[y]) {
                 this.lastColumnIsDummy[y] = true;
             }
-            // results in a multiple of 8 for compWidth
-            // this will make the rest of the program fail for the unlikely
-            // event that someone tries to compress an 16 x 16 pixel image
-            // which would of course be worse than pointless
             this.BlockWidth[y] = (int) Math.ceil(this.compWidth[y] / 8.0);
             this.compHeight[y] = (this.imageHeight % 8 != 0 ? (int) Math.ceil(this.imageHeight / 8.0) * 8
                     : this.imageHeight) / this.MaxVsampFactor * this.VsampFactor[y];
